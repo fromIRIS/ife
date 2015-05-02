@@ -1,0 +1,122 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+html,body {
+	height: 100%;
+	min-height: 500px;
+	font-size: 12px;
+	/*overflow: hidden;*/
+}
+#wrap {
+	height: 100%;
+	min-width: 800px;
+}
+#header {
+	height: 12%;
+	width: 100%;
+	/*min-width: 800px;*/
+	background-color: #ddd;
+}
+#container-wrap {
+	width: 100%;
+	/*min-width: 800px;*/
+	height: 81%;
+	/*background-color: red;*/
+	overflow: hidden;
+}
+#task-classify,
+#task-list,
+#task-main-wrap {
+	float: left;
+	/*margin-bottom: -5000px;*/
+	padding-bottom: 5000px;
+}
+#task-main-wrap {
+	width: 100%;
+}
+#task-main {
+	margin-left: 500px;
+	padding-bottom: 5000px;
+	/*margin-bottom: -5000px;*/
+}
+#task-main-header {
+	padding: 15px;
+	background-color: #F2F2F2;
+	position: relative;
+	border-bottom: 1px solid #ccc;
+}
+.icon-write {
+	position: absolute;
+	right: 20px;
+	top: 50%;
+	margin-top: -10px;
+	cursor: pointer;
+}
+.icon-tick {
+	position: absolute;
+	right: 60px;
+	top: 50%;
+	margin-top: -8px;
+	cursor: pointer;
+}
+#finish-time {
+	padding: 15px;
+	border-bottom: 1px solid #ccc;
+	background-color: #FAFAEE;
+}
+#task-main-content {
+	padding: 15px;
+}
+#task-classify {
+	width: 239px;
+	background-color: #F2F2F2;
+	margin-left: -100%;
+	padding-top: 20px;
+	padding-left: 10px;
+	border-right: 1px solid #ccc;
+}
+
+#task-list {
+	width: 249px;
+	position: relative;
+	margin-left: -100%;
+	left: 250px;
+	border-right: 1px solid #ccc;
+}
+#task-list-header {
+	overflow: hidden;
+	padding: 5px;
+	background-color: #eee;
+	border-bottom: 1px solid #ccc;
+}
+#task-list-header li {
+	list-style: none;
+	float: left;
+	padding: 5px 10px;
+	border: 1px solid transparent;
+}
+#footer {
+	height: 7%;
+	width: 500px;
+	background-color: #eee;
+	border-top: 1px solid #ccc;
+	overflow: hidden;
+}
+.footer-add {
+	border-right: 1px solid #ccc;
+	width: 249px;
+	float: left;
+	height: 100%;
+	/*text-align: center;*/
+	background: url(../img/20150503123559313_easyicon_net_24.png);
+	background-size: 15px;
+	background-position: 20% center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.footer-add p {
+	position: relative;
+	top: 34%;
+	left: 30%;
+}
