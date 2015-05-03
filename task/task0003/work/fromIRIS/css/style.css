@@ -1,3 +1,4 @@
+/*reset*/
 * {
 	padding: 0;
 	margin: 0;
@@ -8,37 +9,36 @@ html,body {
 	font-size: 12px;
 	/*overflow: hidden;*/
 }
+/*wrap包裹器*/
 #wrap {
 	height: 100%;
 	min-width: 800px;
 }
+/*头部*/
 #header {
 	height: 12%;
 	width: 100%;
 	/*min-width: 800px;*/
 	background-color: #ddd;
 }
-#container-wrap {
+/*中部任务分类，任务时间列表，任务详情*/
+.container-wrap {
 	width: 100%;
-	/*min-width: 800px;*/
 	height: 81%;
-	/*background-color: red;*/
 	overflow: hidden;
 }
-#task-classify,
-#task-list,
-#task-main-wrap {
+.task-classify,
+.task-timelist,
+.task-main-wrap {
 	float: left;
-	/*margin-bottom: -5000px;*/
 	padding-bottom: 5000px;
 }
-#task-main-wrap {
+.task-main-wrap {
 	width: 100%;
 }
-#task-main {
+.task-main {
 	margin-left: 500px;
 	padding-bottom: 5000px;
-	/*margin-bottom: -5000px;*/
 }
 #task-main-header {
 	padding: 15px;
@@ -68,34 +68,70 @@ html,body {
 #task-main-content {
 	padding: 15px;
 }
-#task-classify {
-	width: 239px;
+.task-classify {
+	width: 249px;
 	background-color: #F2F2F2;
 	margin-left: -100%;
 	padding-top: 20px;
-	padding-left: 10px;
 	border-right: 1px solid #ccc;
+	color: #8C8686;
+}
+#main-sort li{
+	font-size: 15px;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-weight: bold;
+	cursor: pointer;
+}
+#all-tasklist-box dt {
+	padding: 5px 0 5px 60px;
+	font-size: 14px;
+	background-image: url(../img/icon_newfile.png);
+	background-position: 25px center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+#all-tasklist-box dd {
+	padding: 5px 0 5px 70px;
+	font-size: 12px;
+	background-image: url(../img/icon_smallfile.png);
+	background-position: 50px center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.task-classify .classify-active {
+	background-color: #fff;
+}
+.disappear {
+	display: none;
 }
 
-#task-list {
+.task-timelist {
 	width: 249px;
 	position: relative;
 	margin-left: -100%;
 	left: 250px;
 	border-right: 1px solid #ccc;
 }
-#task-list-header {
+#task-timelist-header {
 	overflow: hidden;
 	padding: 5px;
 	background-color: #eee;
 	border-bottom: 1px solid #ccc;
 }
-#task-list-header li {
+#task-timelist-header li {
 	list-style: none;
 	float: left;
 	padding: 5px 10px;
 	border: 1px solid transparent;
+	cursor: pointer;
 }
+#task-timelist-header .list-header-active {
+	background-color: #fff;
+	border-color: #ccc;
+}
+/*底部新增任务、新增分类*/
 #footer {
 	height: 7%;
 	width: 500px;
