@@ -151,7 +151,6 @@ function getAttrValue(oParent, oAttrName, oAttrValue) {
     var arrT = [];
     for (var i=0; i<elem.length; i++) {
         if (elem[i].attributes.length > 0) {
-            // console.log(elem[i].getAttribute(oAttrName))
             for (var j=0; j<elem[i].attributes.length; j++) {
                 if (elem[i].attributes[j].name == oAttrName) {
                     if (elem[i].getAttribute(oAttrName) == oAttrValue) {
@@ -180,7 +179,6 @@ function $(selector) {
             break;
 
             case "[":
-                console.log(sTr.search(/=/g))
                 if (sTr.search(/=/g) == -1) {
                     var reg = /^\[|\]$/g;//开头结尾的符号[];
                     var newStr = sTr.replace(reg, "");
@@ -188,9 +186,7 @@ function $(selector) {
                 } else {
                     var reg = /^\[|\]$/g;//开头结尾的符号[];
                     var newStr = sTr.replace(reg, "");
-                    console.log(newStr)
                     var arrStr = newStr.split("=");
-                    console.log(arrStr)
                     var oAttrName = arrStr[0];
                     var oAttrValue = arrStr[1];
                     return getAttrValue(document, oAttrName, oAttrValue)[0];

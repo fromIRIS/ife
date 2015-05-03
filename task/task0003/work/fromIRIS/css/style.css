@@ -84,7 +84,7 @@ html,body {
 	font-weight: bold;
 	cursor: pointer;
 }
-#all-tasklist-box dt {
+.task-classify dt {
 	padding: 5px 0 5px 60px;
 	font-size: 14px;
 	background-image: url(../img/icon_newfile.png);
@@ -92,11 +92,19 @@ html,body {
 	background-repeat: no-repeat;
 	cursor: pointer;
 }
-#all-tasklist-box dd {
+.task-classify dd {
 	padding: 5px 0 5px 70px;
 	font-size: 12px;
 	background-image: url(../img/icon_smallfile.png);
 	background-position: 50px center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+#classify-default p {
+	padding: 5px 0 5px 60px;
+	font-size: 14px;
+	background-image: url(../img/icon_newfile.png);
+	background-position: 25px center;
 	background-repeat: no-repeat;
 	cursor: pointer;
 }
