@@ -3,11 +3,13 @@ MYAPP.todoFunctions = {};
 MYAPP.classify = {};
 MYAPP.classify.todoFunctions = {};
 MYAPP.classify.ele = {};
+
 MYAPP.classify.ele.buildDl = function (title) {
 	var oo = $("#all-tasklist-box");
 	var oFirst = oo.getElementsByTagName("dl")[0];
 	var aa = document.createElement("dl");
 	var bb = document.createElement("dt");
+    // bb.style.position = "relative";
 	bb.innerHTML = title + "<span></span>";
 	aa.appendChild(bb);
 	if (oFirst) {
@@ -21,6 +23,7 @@ MYAPP.classify.ele.buildDd = function (title) {
 	var aDt = $("#all-tasklist-box").getElementsByTagName("dt");
 	var bb = document.createElement("dd");
 	bb.innerHTML = title + "<span></span>";
+    // bb.style.position = "relative";
 	/*if ($("[class=classify-active]")) {
 		var highLightbg = $("[class=classify-active]");
 		if (highLightbg.nodeName.toLowerCase() == "dt") {
@@ -37,7 +40,24 @@ MYAPP.classify.ele.buildDd = function (title) {
 			highLightbg.parentNode.appendChild(bb);
 		}
 }
-
+MYAPP.classify.ele.buildDelete = function (ev) {
+    var e = ev ||event;
+    var target = e.target || e.srcElement;
+    var oImg = document.createElement("img");
+    oImg.src = "img/icon_close.png";
+    target.appendChild(oImg);
+}
+MYAPP.classify.ele.offDelete = function (ev) {
+    var e = ev ||event;
+    var target = e.target || e.srcElement;
+    var aNodeChild = target.childNodes;
+    console.log(aNodeChild)
+    for (var i=0; i<aNodeChild.length; i++) {
+        if (aNodeChild[i].nodeName.toLowerCase() == "img") {
+            target.removeChild(aNodeChild[i]);
+        }
+    }
+}
 MYAPP.classify.todoFunctions.clickHightlight = function () {
 	$.delegate("#main-sort", "li", "click", addbg);
 	$.delegate("#all-tasklist-box", "dd", "click", addbg);
@@ -99,7 +119,21 @@ MYAPP.classify.todoFunctions.newClassify = function () {
 		}
 	}
 }
+MYAPP.classify.todoFunctions.hoverDelete = function () {
+	$.delegate("#all-tasklist-box", "dt", "mouseover", showDelete);
+	$.delegate("#all-tasklist-box", "dd", "mouseover", showDelete);
+	$.delegate("#all-tasklist-box", "dt", "mouseout", offDelete);
+	$.delegate("#all-tasklist-box", "dd", "mouseout", offDelete);
+	function showDelete(ev) {
+        MYAPP.classify.ele.buildDelete(ev);
+	}
+    function offDelete(ev) {
+        MYAPP.classify.ele.offDelete(ev);
+    }
+}
 //点击classify栏里的切换，背景改变
 MYAPP.classify.todoFunctions.clickHightlight();
 //生成一个新分类
 MYAPP.classify.todoFunctions.newClassify();
+//在类别上hover显示close
+MYAPP.classify.todoFunctions.hoverDelete();
