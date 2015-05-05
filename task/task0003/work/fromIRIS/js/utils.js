@@ -567,6 +567,7 @@ var getTarget = function(ev) {
 }
 function getSibling(ele, nodeName) {
     var arr = [];
+    console.log(ele.parentNode)
     var aChild = ele.parentNode.childNodes;
     for (var i=0; i<aChild.length; i++) {
         if (aChild[i].nodeName.toLowerCase() == nodeName) {
@@ -574,4 +575,12 @@ function getSibling(ele, nodeName) {
         }
     }
     return arr;
+}
+function index(elem) { //parentNode.parentNode此处非常不妥
+    var arr = elem.parentNode.parentNode.getElementsByTagName(elem.nodeName.toLowerCase());
+    for (var i=0; i<arr.length; i++) {
+        if (arr[i] === elem) {
+            return i;
+        }
+    }
 }

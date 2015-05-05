@@ -60,6 +60,23 @@ html,body {
     margin-top: -8px;
     cursor: pointer;
 }
+#edit-confirm {
+    overflow: hidden;
+    position: absolute;
+    left: 300px;
+    top: 50%;
+    margin-top: -12px;
+}
+#edit-confirm li {
+    list-style: none;
+    float: left;
+    padding: 5px 10px;
+    background-color: #ccc;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+
 #finish-time {
     padding: 15px;
     border-bottom: 1px solid #ccc;
