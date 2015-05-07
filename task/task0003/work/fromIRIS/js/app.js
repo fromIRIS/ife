@@ -1,7 +1,15 @@
-//是否要把文件夹的索引值设置为全局变量
+//取消编辑
 var MYAPP = MYAPP || {};
+MYAPP.reEditContent = {};//编辑任务时的临时内容
 MYAPP.Data = [];
-MYAPP.index = 0;
+MYAPP.index = 0;//点击分类列表时当前index值赋给此全局变量
+MYAPP.timeBoxList = [];//存放某个文件夹的timelist列表
+MYAPP.taskNum = [];
+for (var i=0; i<100000; i++) {
+    MYAPP.taskNum.push(0);
+}
+MYAPP.Num = 0;//添加新分类时就会累加Num
+// MYAPP.Num2 = 0;  //每个文件夹中添加新任务的序号
 MYAPP.todoFunctions = {};
 
 MYAPP.classify = {};
@@ -29,7 +37,7 @@ MYAPP.classify.ele.buildDl = function (title) {
 }
 MYAPP.classify.ele.buildDd = function (title) {
 	var aDt = $("#all-tasklist-box").getElementsByTagName("dt");
-	var bb = document.createElement("dd");
+    var bb = document.createElement("dd");
 	bb.innerHTML = title + "<span></span>";
 	var highLightbg = null;
 	for (var i=0; i<aDt.length; i++) {
@@ -38,11 +46,14 @@ MYAPP.classify.ele.buildDd = function (title) {
 		}
 	}
 	if (highLightbg) {
-			highLightbg.parentNode.appendChild(bb);
+        
+        bb.index = MYAPP.Num ++;
+		highLightbg.parentNode.appendChild(bb);
 	}
     var arrFile = [];
     MYAPP.Data.push(arrFile);
-    console.log(MYAPP.Data)
+    console.log("分类文件夹数组个数" + MYAPP.Data.length)
+    console.log("新生成文件夹的数量" + MYAPP.Num)
 }
 MYAPP.classify.ele.buildDelete = function (ev) {
     var e = ev ||event;
@@ -81,6 +92,8 @@ MYAPP.classify.todoFunctions.clickAll = function () {
 	$.delegate("#classify-default", "p", "click", addbg)
 	$.delegate("#all-tasklist-box", "dt", "click", tab);
     $.delegate("#all-tasklist-box", "img", "click", deleteFile);
+    $.delegate("#all-tasklist-box", "img", "click", clearTimeList);
+    $.delegate("#all-tasklist-box", "dd", "click", updateIndex);
     $.delegate("#all-tasklist-box", "dd", "click", updateTimeList);
 	function addbg (ev) {
 		var aLi = $("#main-sort").getElementsByTagName("li");
@@ -133,13 +146,26 @@ MYAPP.classify.todoFunctions.clickAll = function () {
             }
         }
     }
-    function updateTimeList(ev) {
+    function updateIndex(ev) {
         var e = ev || event;
         var target = e.target || e.srcElement;
-        target.index = index(target);
-        MYAPP.Data.index = target.index;
-        console.log(MYAPP.Data.index)
-
+        // target.index = index(target);
+        // target.index = target.index;
+        MYAPP.index = target.index;
+        console.log("点击文件夹时的序号" + MYAPP.index)
+    }
+    function clearTimeList() {
+        $("#task-timelist-list").innerHTML = "";
+        MYAPP.timelist.ele.removeEditor("欢迎使用DD任务", "无限制", "xxx");
+    }
+    function updateTimeList() {
+        // $("#task-timelist-list").innerHTML = "";
+        MYAPP.timelist.ele.removeEditor("欢迎使用DD任务", "无限制", "xxx");
+        if (MYAPP.timeBoxList[MYAPP.index]) {
+            $("#task-timelist-list").innerHTML = MYAPP.timeBoxList[MYAPP.index];
+        } else {
+            $("#task-timelist-list").innerHTML = "";
+        }
     }
 }
 MYAPP.classify.todoFunctions.newClassify = function () {
@@ -190,7 +216,7 @@ MYAPP.classify.todoFunctions.hoverDelete = function () {
 }
 
 
-MYAPP.timelist.ele.buildEditor = function () {
+MYAPP.timelist.ele.buildEditorNewTask = function () {//1.title 2.time 3.content
     var oTaskMain = $(".task-main");
     oTaskMain.innerHTML = "";
     var oHeader = document.createElement("div");
@@ -199,15 +225,18 @@ MYAPP.timelist.ele.buildEditor = function () {
     oHeader.appendChild(oHeaderTxt);
     var oHeaderBox = document.createElement("input");
     oHeaderBox.type = "text";
+    if (arguments[0]) {
+        oHeaderBox.value = arguments[0];
+    }
     oHeader.appendChild(oHeaderBox);
     var oEditConfirm = document.createElement("ul");
-    oEditConfirm.id = "edit-confirm";
+    oEditConfirm.id = "newtask-edit-confirm";
     var oEditTrue = document.createElement("li");
-    oEditTrue.id = "edit-true";
+    oEditTrue.id = "newtask-edit-true";
     oEditTrue.innerHTML = "确认";
     oEditConfirm.appendChild(oEditTrue);
     var oEditFalse = document.createElement("li");
-    oEditFalse.id = "edit-false";
+    oEditFalse.id = "newtask-edit-false";
     oEditFalse.innerHTML = "取消";
     oEditConfirm.appendChild(oEditFalse);
     oHeader.appendChild(oEditConfirm);
@@ -218,6 +247,9 @@ MYAPP.timelist.ele.buildEditor = function () {
     oTime.appendChild(oTimeTxt);
     var oTimeBox = document.createElement("input");
     oTimeBox.type = "text";
+    if (arguments[1]) {
+        oTimeBox.value = arguments[1];
+    }
     oTime.appendChild(oTimeBox);
     oTaskMain.appendChild(oTime);
     var oTxt = document.createElement("div");
@@ -225,16 +257,68 @@ MYAPP.timelist.ele.buildEditor = function () {
     var oTextArea = document.createElement("textarea");
     oTextArea.cols = 80;
     oTextArea.rows = 80;
+    if (arguments[2]) {
+        oTextArea.value = arguments[2];
+    }
     oTxt.appendChild(oTextArea);
     oTaskMain.appendChild(oTxt);
 }
-MYAPP.timelist.ele.removeEditor = function () {
+MYAPP.timelist.ele.buildEditorEditTask = function () {//1.title 2.time 3.content
+    var oTaskMain = $(".task-main");
+    oTaskMain.innerHTML = "";
+    var oHeader = document.createElement("div");
+    oHeader.id = "task-main-header";
+    var oHeaderTxt = document.createTextNode("输入标题： ");
+    oHeader.appendChild(oHeaderTxt);
+    var oHeaderBox = document.createElement("input");
+    oHeaderBox.type = "text";
+    if (arguments[0]) {
+        oHeaderBox.value = arguments[0];
+    }
+    oHeader.appendChild(oHeaderBox);
+    var oEditConfirm = document.createElement("ul");
+    oEditConfirm.id = "edittask-edit-confirm";
+    var oEditTrue = document.createElement("li");
+    oEditTrue.id = "edittask-edit-true";
+    oEditTrue.innerHTML = "确认";
+    oEditConfirm.appendChild(oEditTrue);
+    var oEditFalse = document.createElement("li");
+    oEditFalse.id = "edittask-edit-false";
+    oEditFalse.innerHTML = "取消";
+    oEditConfirm.appendChild(oEditFalse);
+    oHeader.appendChild(oEditConfirm);
+    oTaskMain.appendChild(oHeader);
+    var oTime = document.createElement("div");
+    oTime.id = "finish-time";
+    var oTimeTxt = document.createTextNode("完成时间： ");
+    oTime.appendChild(oTimeTxt);
+    var oTimeBox = document.createElement("input");
+    oTimeBox.type = "text";
+    if (arguments[1]) {
+        oTimeBox.value = arguments[1];
+    }
+    oTime.appendChild(oTimeBox);
+    oTaskMain.appendChild(oTime);
+    var oTxt = document.createElement("div");
+    oTxt.id = "task-main-content";
+    var oTextArea = document.createElement("textarea");
+    oTextArea.cols = 80;
+    oTextArea.rows = 80;
+    if (arguments[2]) {
+        oTextArea.value = arguments[2];
+    }
+    oTxt.appendChild(oTextArea);
+    oTaskMain.appendChild(oTxt);
+}
+MYAPP.timelist.ele.removeEditor = function () {//1.title 2.time 3.content
     var oTaskMain = $(".task-main");
     oTaskMain.innerHTML = "";
     var oHeader = document.createElement("div");
     oHeader.id = "task-main-header";
     var oTitle = document.createElement("h1");
-    oTitle.innerHTML = "ddd";
+    if (arguments[0]) {
+        oTitle.innerHTML = arguments[0];
+    }
     oHeader.appendChild(oTitle);
     var oImgFinish = document.createElement("img");
     oImgFinish.src = "img/icon_write.png";
@@ -249,35 +333,173 @@ MYAPP.timelist.ele.removeEditor = function () {
 
     var oTime = document.createElement("div");
     oTime.id = "finish-time";
-    var oTimeTxt = document.createTextNode("完成时间： ");
+    var oTimeTxt = document.createTextNode("时间期限: ");
+    // oTimeTxt.innerHTML = "时间期限: ";
     oTime.appendChild(oTimeTxt);
+    var oTimeTxtValue = document.createElement("span");
+    if (arguments[1]) {
+        oTimeTxtValue.innerHTML = arguments[1];
+    }
+    oTime.appendChild(oTimeTxtValue);
     oTaskMain.appendChild(oTime);
 
     var oTxt = document.createElement("div");
     oTxt.id = "task-main-content";
-    var oTextArea = document.createElement("textarea");
-    oTextArea.cols = 80;
-    oTextArea.rows = 80;
+    var oTextArea = document.createElement("p");
+    if (arguments[2]) {
+        oTextArea.innerHTML = arguments[2];
+    }
     oTxt.appendChild(oTextArea);
     oTaskMain.appendChild(oTxt);
+}
+MYAPP.timelist.ele.addArrayTaskInfo = function () {
+    var oContent = {};
+    oContent.titleTxt = $("#task-main-header").getElementsByTagName("input")[0].value;
+    oContent.timeTxt = $("#finish-time").getElementsByTagName("input")[0].value;
+    oContent.contentTxt = $("#task-main-content").getElementsByTagName("textarea")[0].value;
+    MYAPP.Data[MYAPP.index].push(oContent);
+    console.log(MYAPP.Data)
+}
+MYAPP.timelist.ele.updateTaskInfo = function () {
+    var oTimeBox = $("#task-timelist-list");
+    var listObj = MYAPP.Data[MYAPP.index];
+    var oTimeBoxDt = oTimeBox.getElementsByTagName("dt");
+    for (var i=0; i<oTimeBoxDt.length; i++) {
+        if (oTimeBoxDt[i].innerHTML == listObj[listObj.length-1].timeTxt) {
+            var oDd = document.createElement("dd");
+            oDd.id = MYAPP.taskNum[MYAPP.index] ++;
+            oDd.innerHTML = listObj[listObj.length-1].titleTxt;
+            oTimeBoxDt[i].parentNode.appendChild(oDd);
+            return;
+        }
+    }
+
+    var oDl = document.createElement("dl");
+    var oDt = document.createElement("dt");
+    oDt.innerHTML = listObj[listObj.length-1].timeTxt;
+    oDl.appendChild(oDt);
+    var oDd = document.createElement("dd");
+    oDd.id = MYAPP.taskNum[MYAPP.index] ++;
+    console.log("生成任务列表的task-id" + oDd.id )
+    oDd.innerHTML = listObj[listObj.length-1].titleTxt;
+    oDl.appendChild(oDd);
+    oTimeBox.appendChild(oDl);
+
+    var arrNewDl = [];
+    var aDl = oTimeBox.getElementsByTagName("dl");
+    for (var i=0; i<aDl.length; i++ ) {
+        arrNewDl.push(aDl[i]);
+    }
+    //将生成的dl按照dl下的dt进行排序
+    var d = new Date();
+    arrNewDl.sort(function (x, y) {
+        a1 = x.getElementsByTagName("dt")[0].innerHTML;
+        a2 = y.getElementsByTagName("dt")[0].innerHTML;
+        o1 = d.setFullYear(a1.split("-")[0], a1.split("-")[1], a1.split("-")[2]);
+        o2 = d.setFullYear(a2.split("-")[0], a2.split("-")[1], a2.split("-")[2]);
+        return o1 - o2;
+    })
+    console.log(arrNewDl)
+    oTimeBox.innerHTML = "";
+    for (var i=0; i<arrNewDl.length; i++) {
+        var oDl2 = document.createElement("dl");
+        oDl2.innerHTML = arrNewDl[i].innerHTML;
+        oTimeBox.appendChild(oDl2);
+    }
+}
+
+MYAPP.timelist.todoFunctions.cancelReEdit = function () {
+    $.delegate(".task-main", "li", "click", function (ev) {
+        var e = ev || event;
+        var target = e.target || e.srcElement;
+        if (target.id == "edittask-edit-false") {
+            var oTitle = MYAPP.reEditContent.titleTxt;
+            var oTime = MYAPP.reEditContent.timeTxt;
+            var oContent = MYAPP.reEditContent.contentTxt;
+            MYAPP.timelist.ele.removeEditor(oTitle, oTime, oContent);
+        }
+    });
+}
+MYAPP.timelist.todoFunctions.cancelNewTask = function () {
+    $.delegate(".task-main", "li", "click", function (ev) {
+        var e = ev || event;
+        var target = e.target || e.srcElement;
+        if (target.id == "newtask-edit-false") {
+            // var oTitle = $("#task-main-header").getElementsByTagName("input")[0].value;
+            // var oTime = $("#finish-time").getElementsByTagName("input")[0].value;
+            // var oContent = $("#task-main-content").getElementsByTagName("textarea")[0].value;
+            MYAPP.timelist.ele.removeEditor("欢迎使用DD任务", "无限制", "xxx");
+        }
+    });
+}
+MYAPP.timelist.todoFunctions.confirmNewTask = function () {
+    $.delegate(".task-main", "li", "click", function (ev) {
+        var e = ev || event;
+        var target = e.target || e.srcElement;
+        if (target.id == "newtask-edit-true") {
+            MYAPP.timelist.ele.addArrayTaskInfo();
+            MYAPP.timelist.ele.updateTaskInfo();
+            MYAPP.timeBoxList[MYAPP.index] = $("#task-timelist-list").innerHTML;
+            var oTitle = $("#task-main-header").getElementsByTagName("input")[0].value;
+            var oTime = $("#finish-time").getElementsByTagName("input")[0].value;
+            var oContent = $("#task-main-content").getElementsByTagName("textarea")[0].value;
+            MYAPP.timelist.ele.removeEditor(oTitle, oTime, oContent);
+
+        }
+    });
+}
+MYAPP.timelist.todoFunctions.confirmReEdit = function () {
+
+}
+MYAPP.timelist.todoFunctions.clickTimeList = function () {
+    $.delegate("#task-timelist-list", "dd", "click", showTaskInfo);
+    function showTaskInfo(ev) {
+        var e = ev || event;
+        var target = e.target || e.srcElement;
+        var aP = $("#task-timelist-list").getElementsByTagName("dd");
+        for (var i=0; i<aP.length; i++) {
+            removeClass(aP[i], "time-active");
+        }
+        addClass(target, "time-active");
+        // target.index = index(target);
+        console.log( "task的序号" + target.id)
+        var oTitle = MYAPP.Data[MYAPP.index][target.id].titleTxt;
+        var oTime = MYAPP.Data[MYAPP.index][target.id].timeTxt;
+        var oContent = MYAPP.Data[MYAPP.index][target.id].contentTxt;
+        MYAPP.timelist.ele.removeEditor(oTitle, oTime, oContent);
+    }
+}
+MYAPP.timelist.todoFunctions.reEdit = function () {
+    $.delegate(".task-main", "img", "click", reEditTask);
+    function reEditTask(ev) {
+        var e = ev || event;
+        console.log(e)
+        var target = e.target || e.srcElement;
+        if (target.className == "icon-write") {
+            var oTitle = $("#task-main-header").getElementsByTagName("h1")[0].innerHTML;
+            var oTime = $("#finish-time").getElementsByTagName("span")[0].innerHTML;
+            var oContent = $("#task-main-content").getElementsByTagName("p")[0].innerHTML;
+            MYAPP.timelist.ele.buildEditorEditTask(oTitle, oTime, oContent);
+            MYAPP.reEditContent.titleTxt = oTitle;
+            MYAPP.reEditContent.timeTxt = oTime;
+            MYAPP.reEditContent.contentTxt = oContent;
+        }
+
+    }
+
 }
 MYAPP.timelist.todoFunctions.newTask = function () {
     addClickEvent($("#newtask"), getNewTask);
     function getNewTask() {
         // if() {}  //需要判断可以新开任务的条件
-        MYAPP.timelist.ele.buildEditor();
+        var aDd = $("#all-tasklist-box").getElementsByTagName("dd");
+        for (var i=0; i<aDd.length; i++) {
+            if (aDd[i].className == "classify-active") {
+                MYAPP.timelist.ele.buildEditorNewTask();
+            }
+        }
     }
 }
-MYAPP.timelist.todoFunctions.cancelNewTask = function () {
-    $.delegate(".task-main", "li", "click", function (ev) {
-        var e = ev || event;
-        var target = e.event || e.srcElement;
-        if (target.id == "edit-false") {
-            MYAPP.timelist.ele.removeEditor();
-        }
-    });
-}
-
 //点击classify栏里的切换，背景改变
 MYAPP.classify.todoFunctions.clickAll();
 //生成一个新分类
@@ -285,6 +507,11 @@ MYAPP.classify.todoFunctions.newClassify();
 //在类别上hover显示close
 MYAPP.classify.todoFunctions.hoverDelete();
 
+MYAPP.timelist.todoFunctions.cancelReEdit();
 MYAPP.timelist.todoFunctions.cancelNewTask();
+MYAPP.timelist.todoFunctions.confirmNewTask();
+MYAPP.timelist.todoFunctions.confirmNewTask();
 
 MYAPP.timelist.todoFunctions.newTask();//点击文件夹后才可以新建任务
+MYAPP.timelist.todoFunctions.clickTimeList();
+MYAPP.timelist.todoFunctions.reEdit();

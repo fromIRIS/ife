@@ -60,14 +60,29 @@ html,body {
     margin-top: -8px;
     cursor: pointer;
 }
-#edit-confirm {
+#newtask-edit-confirm {
     overflow: hidden;
     position: absolute;
     left: 300px;
     top: 50%;
     margin-top: -12px;
 }
-#edit-confirm li {
+#newtask-edit-confirm li {
+    list-style: none;
+    float: left;
+    padding: 5px 10px;
+    background-color: #ccc;
+    margin-right: 10px;
+    cursor: pointer;
+}
+#edittask-edit-confirm {
+    overflow: hidden;
+    position: absolute;
+    left: 300px;
+    top: 50%;
+    margin-top: -12px;
+}
+#edittask-edit-confirm li {
     list-style: none;
     float: left;
     padding: 5px 10px;
@@ -81,6 +96,9 @@ html,body {
     padding: 15px;
     border-bottom: 1px solid #ccc;
     background-color: #FAFAEE;
+}
+#finish-time p {
+    width: 200px;
 }
 #task-main-content {
     padding: 15px;
@@ -164,6 +182,16 @@ html,body {
     background-color: #fff;
     border-color: #ccc;
 }
+#task-timelist-list dt {
+    padding: 5px 10px;
+    background-color: #FAFAEE;
+}
+#task-timelist-list dd {
+    padding: 5px 30px;
+}
+.time-active {
+    background-color: #ccc;
+}
 /*底部新增任务、新增分类*/
 #footer {
     height: 7%;
@@ -177,15 +205,16 @@ html,body {
     width: 249px;
     float: left;
     height: 100%;
-    /*text-align: center;*/
     background: url(../img/20150503123559313_easyicon_net_24.png);
     background-size: 15px;
     background-position: 20% center;
     background-repeat: no-repeat;
     cursor: pointer;
+    position: relative;
 }
 .footer-add p {
-    position: relative;
+    position: absolute;
     top: 34%;
     left: 30%;
+    width: 200px;
 }
