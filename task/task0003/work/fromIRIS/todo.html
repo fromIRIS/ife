@@ -44,11 +44,15 @@
                 </div>
                 <div class="task-timelist">
                     <ul id="task-timelist-header">
-                        <li class="list-header-active">所有</li>
-                        <li>已完成</li>
-                        <li>未完成</li>
+                        <li id="0" class="list-header-active">所有</li>
+                        <li id="1">已完成</li>
+                        <li id="2">未完成</li>
                     </ul>
-                    <div id="task-timelist-list"></div>
+                    <div id="timetask-box">
+                        <div class="timelist-box timebox-active" id="task-timelist-list"></div>
+                        <div class="timelist-box" id="task-timelist-list-finished"></div>
+                        <div class="timelist-box" id="task-timelist-list-unfinished"></div>
+                    </div>
                 </div>
             </div>
             <div id="footer">

@@ -182,13 +182,27 @@ html,body {
     background-color: #fff;
     border-color: #ccc;
 }
-#task-timelist-list dt {
+.timelist-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: none;
+}
+#timetask-box {
+    position: relative;
+}
+#timetask-box dt {
     padding: 5px 10px;
     background-color: #FAFAEE;
 }
-#task-timelist-list dd {
+#timetask-box dd {
     padding: 5px 30px;
 }
+#timetask-box .timebox-active {
+    display: block;
+}
+
 .time-active {
     background-color: #ccc;
 }
