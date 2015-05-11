@@ -31,14 +31,17 @@ html,body {
 .task-timelist,
 .task-main-wrap {
     float: left;
-    padding-bottom: 5000px;
+    height: 100%;
+    overflow: auto;
+    /*padding-bottom: 5000px;*/
 }
 .task-main-wrap {
     width: 100%;
 }
 .task-main {
     margin-left: 500px;
-    padding-bottom: 5000px;
+    height: 100%;
+    /*padding-bottom: 5000px;*/
 }
 #task-main-header {
     padding: 15px;
@@ -188,6 +191,7 @@ html,body {
     left: 0;
     width: 100%;
     display: none;
+    overflow: auto;
 }
 #timetask-box {
     position: relative;
@@ -198,11 +202,14 @@ html,body {
 }
 #timetask-box dd {
     padding: 5px 30px;
+    cursor: pointer;
 }
 #timetask-box .timebox-active {
     display: block;
 }
-
+.task-list-finished {
+    color: red;
+}
 .time-active {
     background-color: #ccc;
 }

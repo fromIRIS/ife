@@ -16,7 +16,7 @@ function isNum(num) {
 
 //判断数据类型的方法↑
 
-function cloneObject(obj) {
+/*function cloneObject(obj) {
     if (typeof(obj) != 'object'){
         return obj;
     }
@@ -25,8 +25,8 @@ function cloneObject(obj) {
         result[attr] = cloneObject(obj[attr]);
     }
     return result;
-}
-/*function cloneObject(p, c) {
+}*/
+function cloneObject(p, c) {
     var c = c || {};
     for (var i in p) {
         if (typeof p[i] === 'object') {
@@ -37,9 +37,20 @@ function cloneObject(obj) {
         }
     }
     return c;
-}*/
+}
 //递归法深克隆↑
+function cloneArr(arr){
 
+    var t = [];
+    for(var i=0,len=arr.length;i<len;i++) {
+        if(typeof arr[i] == 'object'){
+             t.push(cloneArr(arr[i]));//递归
+        }else {
+            t.push(arr[i]);
+        }
+    }
+    return t;
+}
 function uniqArray(arr) {
     for (i=0; i < arr.length; i++) {
         for (j = i + 1; j < arr.length; j++) {
