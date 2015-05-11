@@ -1,7 +1,7 @@
 var MYAPP = MYAPP || {};
 MYAPP.reEditContent = {};//编辑任务时的临时内容
 MYAPP.Data = [];//存放分类文件夹-所有任务
-for (var i=0; i<100; i++) {
+for (var i=0; i<1000; i++) {
     MYAPP.Data.push(new Array());
 }
 MYAPP.index = 0;//点击分类列表时当前index值赋给此全局变量
@@ -15,11 +15,11 @@ for (var i=0; i<100; i++) {
 MYAPP.subIndex = 0; //点击time-task列表时当前id值赋给此全局变量
 // MYAPP.Num = 0;//添加新分类时就会累加Num
 MYAPP.DataFinished = [];
-for (var i=0; i<100; i++) {
+for (var i=0; i<1000; i++) {
     MYAPP.DataFinished.push(new Array());
 }
 MYAPP.DataUnFinished = [];
-for (var i=0; i<100; i++) {
+for (var i=0; i<1000; i++) {
     MYAPP.DataUnFinished.push(new Array());
 }
 MYAPP.todoFunctions = {};
@@ -27,27 +27,37 @@ MYAPP.todoFunctions = {};
 MYAPP.todoFunctions.classifySet = function () {
     var innerClassify = $("#all-tasklist-box").innerHTML;
     localStorage.setItem("classify", innerClassify);
+    var classifyAlltaskCount = $("#all-task").innerHTML;
+    localStorage.setItem("classifyAllTaskCount", classifyAlltaskCount);
+    var classifyDefaultCount = $("#classify-default").getElementsByTagName("p")[0].getElementsByTagName("span")[0].innerHTML;
+    localStorage.setItem("classifyDefaultCount", classifyDefaultCount);
 }
 MYAPP.todoFunctions.indexShow = function () {
+    //初始设置
+    $("#finish-time").innerHTML = "时间期限：" + new Date().getFullYear() +'-'+ parseInt(new Date().getMonth() + 1) +'-'+ new Date().getDate();
+    //显示分类文件夹列表
     var a = localStorage.getItem("classify");
     if (a) {
         $("#all-tasklist-box").innerHTML = a;
         var aDd = $("#all-tasklist-box").getElementsByTagName("dd");
         var aDt = $("#all-tasklist-box").getElementsByTagName("dt");
-        var defaultDt = $("#classify-default").getElementsByTagName("p")[0];
+        var defaultDt = $("#classify-default").getElementsByTagName("p");
 
         for (var i=0; i<aDd.length; i++) {
-            if (aDd[i].id == 0) {
-                addClass(aDd[i], "classify-active");
-                continue;
-            }
             removeClass(aDd[i], "classify-active");
         }
+        addClass(defaultDt, "classify-active");
         for (var i=0; i<aDt.length; i++) {
             removeClass(aDt[i], "classify-active");
         }
-        removeClass(defaultDt, "classify-active");
     }
+    if (localStorage.getItem("classifyAllTaskCount")) {
+        $("#all-task").innerHTML = localStorage.getItem("classifyAllTaskCount");
+    }
+    if (localStorage.getItem("classifyDefaultCount")) {
+        $("#classify-default").getElementsByTagName("p")[0].getElementsByTagName("span")[0].innerHTML = localStorage.getItem("classifyDefaultCount");
+    }
+    //显示任务列表
     var timeBoxList = JSON.parse(localStorage.getItem("MYAPP.timeBoxList"));
     var timeBoxListUnFinished = JSON.parse(localStorage.getItem("MYAPP.timeBoxListUnFinished"));
     var timeBoxListFinished = JSON.parse(localStorage.getItem("MYAPP.timeBoxListFinished"));
@@ -64,6 +74,10 @@ MYAPP.todoFunctions.indexShow = function () {
 MYAPP.todoFunctions.saveInterface = function () {
     var innerClassify = $("#all-tasklist-box").innerHTML;
     localStorage.setItem("classify", innerClassify);
+    var classifyAlltaskCount = $("#all-task").innerHTML;
+    localStorage.setItem("classifyAllTaskCount", classifyAlltaskCount);
+    var classifyDefaultCount = $("#classify-default").getElementsByTagName("p")[0].getElementsByTagName("span")[0].innerHTML;
+    localStorage.setItem("classifyDefaultCount", classifyDefaultCount);
     //将目前的time-task-all列表存到内存
     var MYAPPTimeBoxList = JSON.parse(localStorage.getItem("MYAPP.timeBoxList"));
     if (MYAPPTimeBoxList) {
@@ -142,7 +156,7 @@ MYAPP.classify.ele.buildDd = function (title) {
             console.log(numItems)
             localStorage.setItem("MYAPP.Num", numItems);
         } else {
-            localStorage.setItem("MYAPP.Num", 0);
+            localStorage.setItem("MYAPP.Num", 1);
         }
         bb.id = parseInt(localStorage.getItem("MYAPP.Num"));
         highLightbg.parentNode.appendChild(bb);
@@ -193,8 +207,8 @@ MYAPP.classify.todoFunctions.clickAll = function () {
     $.delegate("#all-tasklist-box", "img", "click", clearTimeList);
     $.delegate("#all-tasklist-box", "dd", "click", updateIndex);
     $.delegate("#all-tasklist-box", "dd", "click", updateTimeList);
-    //将此刻的页面保存
-    // addClickEvent(document, MYAPP.todoFunctions.saveInterface);
+    $.delegate("#classify-default", "p", "click", updateIndex);
+    $.delegate("#classify-default", "p", "click", updateTimeList);
 
     function addbg (ev) {
         var aLi = $("#main-sort").getElementsByTagName("li");
@@ -278,6 +292,7 @@ MYAPP.classify.todoFunctions.clickAll = function () {
         // localStorage.setItem("MYAPP.index", MYAPP.index)
         console.log("点击文件夹时的序号MYAPP.index" + MYAPP.index)
     }
+
     function clearTimeList() {
         $("#task-timelist-list").innerHTML = "";
         MYAPP.timelist.ele.removeEditor("欢迎使用DD任务", "无限制", "xxx");
@@ -725,27 +740,11 @@ MYAPP.timelist.todoFunctions.confirmNewTask = function () {
             MYAPP.timelist.ele.addArrayUnfinished();
             MYAPP.timelist.ele.updateTimeListReEdit($("#task-timelist-list-unfinished"), JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[MYAPP.index]);
 
-            /*//点击确认增加时把当前task-time-all列表，存到内存
-            var MYAPPTimeBoxList = JSON.parse(localStorage.getItem("MYAPP.timeBoxList"));
-            if (MYAPPTimeBoxList) {
-                MYAPPTimeBoxList[MYAPP.index] = $("#task-timelist-list").innerHTML;
-                localStorage.setItem("MYAPP.timeBoxList", JSON.stringify(MYAPPTimeBoxList));
-            } else {
-                MYAPP.timeBoxList[MYAPP.index] = $("#task-timelist-list").innerHTML;
-                localStorage.setItem("MYAPP.timeBoxList", JSON.stringify(MYAPP.timeBoxList));
-            }
-            //将目前的time-task-unfinished-列表存到内存
-            var MYAPPTimeBoxListUnFinished = JSON.parse(localStorage.getItem("MYAPP.timeBoxListUnFinished"));
-            if (MYAPPTimeBoxListUnFinished) {
-                MYAPPTimeBoxListUnFinished[MYAPP.index] = $("#task-timelist-list-unfinished").innerHTML;
-                localStorage.setItem("MYAPP.timeBoxListUnFinished", JSON.stringify(MYAPPTimeBoxListUnFinished));
-            } else {
-                MYAPP.timeBoxListUnFinished[MYAPP.index] = $("#task-timelist-list-unfinished").innerHTML;
-                localStorage.setItem("MYAPP.timeBoxListUnFinished", JSON.stringify(MYAPP.timeBoxListUnFinished));
-            }*/
+            //保存页面
             MYAPP.todoFunctions.saveInterface();
 
             //分类列表的数字显示
+            //各个文件夹未完成task计数
             var aClassifyDd = $("#all-tasklist-box").getElementsByTagName("dd");
             for (var i=0; i<aClassifyDd.length; i++) {
                 if (aClassifyDd[i].id == MYAPP.index) {
@@ -761,13 +760,17 @@ MYAPP.timelist.todoFunctions.confirmNewTask = function () {
                     break;
                 }
             }
-
+            //所有任务的计数
             var aDt = $("#all-tasklist-box").getElementsByTagName("dt");
             var countOfAll = 0;
             for (var i=0; i<aDt.length; i++) {
                 countOfAll += parseInt(aDt[i].getElementsByTagName("span")[0].innerHTML.match(/\d+/));
             }
-            $("#all-task").getElementsByTagName("span")[0].innerHTML = '(' + countOfAll + ')';
+            var countOfAllAddDefault = countOfAll + parseInt(JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[0].length);
+            $("#all-task").getElementsByTagName("span")[0].innerHTML = '(' + countOfAllAddDefault + ')';
+
+            //默认分类计数
+            $("#classify-default").getElementsByTagName("p")[0].getElementsByTagName("span")[0].innerHTML = '(' + parseInt(JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[0].length) + ')';
 
             //生成详情页面
             var oTitle = $("#task-main-header").getElementsByTagName("input")[0].value;
@@ -947,7 +950,12 @@ MYAPP.timelist.todoFunctions.newTask = function () {
         for (var i=0; i<aDd.length; i++) {
             if (aDd[i].className == "classify-active") {
                 MYAPP.timelist.ele.buildEditorNewTask();
+                return;
             }
+        }
+        if ($("#classify-default").getElementsByTagName("p")[0].className == "classify-active") {
+            MYAPP.timelist.ele.buildEditorNewTask();
+            return;
         }
     }
 }

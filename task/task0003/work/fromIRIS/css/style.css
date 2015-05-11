@@ -105,6 +105,8 @@ html,body {
 }
 #task-main-content {
     padding: 15px;
+    line-height: 160%;
+    text-indent: 2em;
 }
 .task-classify {
     width: 249px;
