@@ -261,24 +261,29 @@ MYAPP.classify.todoFunctions.clickAll = function () {
             }
         }
         //分类列表的数字显示
-            var aClassifyDd = $("#all-tasklist-box").getElementsByTagName("dd");
-            for (var i=0; i<aClassifyDd.length; i++) {
-                    var oDl = aClassifyDd[i].parentNode.getElementsByTagName("dt")[0];
-                    var aDdOfDl = getSibling(oDl, "dd");
-
-                    var countOfDl = 0;
+            var aClassifyDt = $("#all-tasklist-box").getElementsByTagName("dt");
+            for (var i=0; i<aClassifyDt.length; i++) {
+                var aDdOfDl = getSibling(aClassifyDt[i], "dd");
+                var countOfDl = 0;
+                if (aDdOfDl.length > 0) {
                     for (var j=0; j<aDdOfDl.length; j++) {
                         countOfDl += parseInt(aDdOfDl[j].getElementsByTagName("span")[0].innerHTML.match(/\d+/));
                     }
-                    oDl.getElementsByTagName("span")[0].innerHTML = '(' + countOfDl + ')';
+                }
+                aClassifyDt[i].getElementsByTagName("span")[0].innerHTML = '(' + countOfDl + ')';
             }
 
+            //所有任务的计数
             var aDt = $("#all-tasklist-box").getElementsByTagName("dt");
             var countOfAll = 0;
             for (var i=0; i<aDt.length; i++) {
                 countOfAll += parseInt(aDt[i].getElementsByTagName("span")[0].innerHTML.match(/\d+/));
             }
-            $("#all-task").getElementsByTagName("span")[0].innerHTML = '(' + countOfAll + ')';
+            var countOfAllAddDefault = countOfAll + parseInt(JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[0].length);
+            $("#all-task").getElementsByTagName("span")[0].innerHTML = '(' + countOfAllAddDefault + ')';
+
+            //默认分类计数
+            $("#classify-default").getElementsByTagName("p")[0].getElementsByTagName("span")[0].innerHTML = '(' + parseInt(JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[0].length) + ')';
 
             //保存页面
             MYAPP.todoFunctions.saveInterface();
@@ -993,26 +998,33 @@ MYAPP.timelist.todoFunctions.finish = function () {
                 MYAPP.timelist.ele.updateTimeListReEdit($("#task-timelist-list-unfinished"), JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[MYAPP.index]);
 
                 //分类列表的数字显示
-                var aClassifyDd = $("#all-tasklist-box").getElementsByTagName("dd");
-                for (var i=0; i<aClassifyDd.length; i++) {
-                    if (aClassifyDd[i].id == MYAPP.index) {
-                        aClassifyDd[i].getElementsByTagName("span")[0].innerHTML = '(' + parseInt(JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[MYAPP.index].length) + ')';
-                        var oDl = aClassifyDd[i].parentNode.getElementsByTagName("dt")[0];
-                        var aDdOfDl = getSibling(oDl, "dd");
-                        var countOfDl = 0;
-                        for (var j=0; j<aDdOfDl.length; j++) {
-                            countOfDl += Number(aDdOfDl[j].getElementsByTagName("span")[0].innerHTML.match(/\d+/));
-                        }
-                        oDl.getElementsByTagName("span")[0].innerHTML = '(' + countOfDl + ')';
-                    }
-                }
+            //各个文件夹未完成task计数
+            var aClassifyDd = $("#all-tasklist-box").getElementsByTagName("dd");
+            for (var i=0; i<aClassifyDd.length; i++) {
+                if (aClassifyDd[i].id == MYAPP.index) {
+                    aClassifyDd[i].getElementsByTagName("span")[0].innerHTML = '(' + parseInt(JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[MYAPP.index].length) + ')';
+                    var oDl = aClassifyDd[i].parentNode.getElementsByTagName("dt")[0];
+                    var aDdOfDl = getSibling(oDl, "dd");
 
-                var aDt = $("#all-tasklist-box").getElementsByTagName("dt");
-                var countOfAll = 0;
-                for (var i=0; i<aDt.length; i++) {
-                    countOfAll += parseInt(aDt[i].getElementsByTagName("span")[0].innerHTML.match(/\d+/));
+                    var countOfDl = 0;
+                    for (var j=0; j<aDdOfDl.length; j++) {
+                        countOfDl += parseInt(aDdOfDl[j].getElementsByTagName("span")[0].innerHTML.match(/\d+/));
+                    }
+                    oDl.getElementsByTagName("span")[0].innerHTML = '(' + countOfDl + ')';
+                    break;
                 }
-                $("#all-task").getElementsByTagName("span")[0].innerHTML = '(' + countOfAll + ')';
+            }
+            //所有任务的计数
+            var aDt = $("#all-tasklist-box").getElementsByTagName("dt");
+            var countOfAll = 0;
+            for (var i=0; i<aDt.length; i++) {
+                countOfAll += parseInt(aDt[i].getElementsByTagName("span")[0].innerHTML.match(/\d+/));
+            }
+            var countOfAllAddDefault = countOfAll + parseInt(JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[0].length);
+            $("#all-task").getElementsByTagName("span")[0].innerHTML = '(' + countOfAllAddDefault + ')';
+
+            //默认分类计数
+            $("#classify-default").getElementsByTagName("p")[0].getElementsByTagName("span")[0].innerHTML = '(' + parseInt(JSON.parse(localStorage.getItem("MYAPP.DataUnFinished"))[0].length) + ')';
 
 
                 /*//点击确认增加时把当前task-time-all列表，存到内存
