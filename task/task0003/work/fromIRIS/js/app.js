@@ -261,6 +261,7 @@ MYAPP.classify.todoFunctions.clickAll = function () {
             }
         }
         //分类列表的数字显示
+        
             var aClassifyDt = $("#all-tasklist-box").getElementsByTagName("dt");
             for (var i=0; i<aClassifyDt.length; i++) {
                 var aDdOfDl = getSibling(aClassifyDt[i], "dd");
